@@ -6,6 +6,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +57,19 @@ public class ExportExcelController {
         ServletOutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
         workbook.close();
+    }
+
+    @GetMapping("txt")
+    public ResponseEntity<FileSystemResource> txt() {
+        String fileName = URLEncoder.encode("测试.txt", StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+        String filePath = "/Users/hansai/测试.txt";
+        FileSystemResource fileResource = new FileSystemResource(filePath);
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
+                // .contentType(MediaType.TEXT_PLAIN)
+                .body(fileResource);
     }
 
 }
